@@ -4,6 +4,8 @@ import Person
 import Day
 import Shift
 
+DEFAULT_DIRECTORY = "../data"
+
 def main():
     # Define and create some individuals. 
     # read the file, create people
@@ -11,17 +13,16 @@ def main():
     msh_shifts = []
     wdw_shifts = []
 
-    with open("people.txt") as f:
+    with open(f"{DEFAULT_DIRECTORY}/people.txt") as f:
         for line in f.readlines():
             people_components = line.rstrip().split("; ")
             person = Person.Person(people_components[0])
             person.add_preference(people_components[1].split(", "))
             person.add_no_go(people_components[2])
             people.append(person)
-            
 
     # now that we have people, assign days
-    with open("days-to-cover.csv") as f: 
+    with open(f"{DEFAULT_DIRECTORY}/days-to-cover.csv") as f: 
         for line in f.readlines():
             components = line.rstrip().split(",")
             new_day = Day.Day(components[0], components[1], components[2]=='1')
@@ -43,16 +44,24 @@ def main():
             # sort by fitness
             person_match = sorted(people, key=lambda person: person.fitness, reverse=True)
             
-            msh_shift.primary=person_match[0].name
-            person_match[0].active_shifts.append(shift)
-            person_match[0].days_active += 1
-            person_match[0].days_primary += 1
-            person_match[0].days_since_last_duty = 0
+            primary = person_match[0]
+            secondary = person_match[1]
 
-            msh_shift.secondary=person_match[1].name
-            person_match[1].active_shifts.append(shift)
-            person_match[1].days_active += 1
-            person_match[1].days_since_last_duty = 0
+            # if the top fitness has been primary a lot, switch it up
+            if (primary.days_active - primary.days_primary) < (secondary.days_active-secondary.days_primary):
+                primary = person_match[1]
+                secondary = person_match[0]
+
+            shift.primary=primary.name
+            primary.active_shifts.append(shift)
+            primary.days_active += 1
+            primary.days_primary += 1
+            primary.days_since_last_duty = 0
+
+            shift.secondary=secondary.name
+            secondary.active_shifts.append(shift)
+            secondary.days_active += 1
+            secondary.days_since_last_duty = 0
 
             wdw_shift.primary=person_match[2].name
             person_match[2].active_shifts.append(shift)
@@ -88,15 +97,14 @@ def main():
             total_shifts += 1
 
         # print out the people in the list
-    for p in people:
-        print(p.to_string())
-
-    for s in shifts:
-        print(s.to_string())
-
+    
     with open("outfile.csv", "w") as f_out:
         for s in shifts:
             f_out.write(f'{s.to_string()}\n')
+
+    print("Statistics: ")
+    for p in people:
+        print(p.results_string())
 
 
 # function to calculate "fitness" of match
