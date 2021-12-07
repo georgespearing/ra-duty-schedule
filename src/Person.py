@@ -34,3 +34,6 @@ class Person:
 
     def to_string(self):
         return f'{self.name}; Prefers: {self.day_preference}; Cannot work {self.no_go_days}'
+
+    def results_string(self):
+        return f'{self.name}; Primary Shifts: {self.days_primary}; Secondary Shifts: {self.days_active-self.days_primary}'
