@@ -8,7 +8,8 @@ def main():
     # Define and create some individuals. 
     # read the file, create people
     people = []
-    shifts = []
+    msh_shifts = []
+    wdw_shifts = []
 
     with open("people.txt") as f:
         for line in f.readlines():
@@ -25,12 +26,13 @@ def main():
             components = line.rstrip().split(",")
             new_day = Day.Day(components[0], components[1], components[2]=='1')
             new_shift = Shift.Shift(new_day)
-            shifts.append(new_shift)
+            msh_shifts.append(new_shift)
+            wdw_shifts.append(new_shift)
     
 
     total_shifts = 0
     # for each day, check if person can do that. if so, assign them
-    for shift in shifts:
+    for shift in msh_shifts:
         
         if not shift.date.is_weekend:
 
@@ -40,16 +42,28 @@ def main():
 
             # sort by fitness
             person_match = sorted(people, key=lambda person: person.fitness, reverse=True)
-            shift.primary=person_match[0].name
+            
+            msh_shift.primary=person_match[0].name
             person_match[0].active_shifts.append(shift)
             person_match[0].days_active += 1
             person_match[0].days_primary += 1
             person_match[0].days_since_last_duty = 0
 
-            shift.secondary=person_match[1].name
+            msh_shift.secondary=person_match[1].name
             person_match[1].active_shifts.append(shift)
             person_match[1].days_active += 1
             person_match[1].days_since_last_duty = 0
+
+            wdw_shift.primary=person_match[2].name
+            person_match[2].active_shifts.append(shift)
+            person_match[2].days_active += 1
+            person_match[2].days_primary += 1
+            person_match[2].days_since_last_duty = 0
+
+            wdw_shift.secondary=person_match[3].name
+            person_match[3].active_shifts.append(shift)
+            person_match[3].days_active += 1
+            person_match[3].days_since_last_duty = 0
 
         
             # get primary person
