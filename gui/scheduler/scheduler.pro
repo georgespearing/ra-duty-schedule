@@ -9,16 +9,25 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    date.cpp \
     main.cpp \
-    mainwindow.cpp
+    person.cpp \
+    scheduler.cpp \
+    shift.cpp
 
 HEADERS += \
-    mainwindow.h
+    date.h \
+    person.h \
+    scheduler.h \
+    shift.h
 
 FORMS += \
-    mainwindow.ui
+    scheduler.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    scheduler.pro.user
