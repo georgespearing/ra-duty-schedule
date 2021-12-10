@@ -1,8 +1,9 @@
 
 class Shift:
 
-    def __init__(self, date):
+    def __init__(self, date, building):
         self.date = date # Day object wihch containts weekend
+        self.building = building # which building duty is in
         self.primary = None # string name of person
         self.secondary = None # string name of person
         # self.is_weekend = is_weekend
@@ -14,4 +15,4 @@ class Shift:
         self.secondary = name
 
     def to_string(self):
-        return f'{self.date.date}, {self.primary}, {self.secondary}'
+        return f'{self.date.date}, {self.building}, {self.primary}, {self.secondary}'
