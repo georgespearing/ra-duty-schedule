@@ -1,21 +1,21 @@
-M1; Wednesday, Thursday; 12/05/21; 08/28/21, 09/10/21, 09/24/21
-M2; Sunday, Monday, Tuesday; none; 09/10/21, 10/01/21
-M3; Monday, Wednesday, Thursday; none; 10/04/21, 10/01/21
-M4; Sunday, Tuesday, Wednesday; 09/10/21, 09/22/21; 09/17/21, 09/24/21
-M5; Sunday, Monday, Wednesday; 09/10/21, 09/22/21; 10/02/21, 10/08/21
-M6; Monday, Tuesday, Thursday; 09/10/21, 09/22/21; 10/02/21, 10/08/21
-M7; Tuesday, Wednesday; 09/10/21, 09/22/21; 10/09/21, 10/15/21
-M8; Tuesday, Thursday; 09/10/21, 09/22/21; 10/09/21, 10/15/21
-M9; Monday, Thursday; 09/10/21, 09/22/21; 10/16/21, 10/23/21
-M10; Tuesday, Wednesday, Thursday, Tuesday, Wednesday; 09/10/21, 09/22/21; 10/16/21, 10/23/21
-M11; Sunday, Tuesday, Thursday; 09/10/21, 09/22/21; 10/22/21, 10/29/21
-W1; Tuesday, Thursday; 10/02/21, 10/11/21, 10/31/21; 10/22/21, 10/29/21
-W2; Wednesday, Thursday; 10/05/21, 10/09/21; 10/20/21, 11/05/21
-W3; Monday, Thursday; 09/12/21, 10/23/21; 10/20/21, 11/05/21
-W4; Sunday, Wednesday; 09/20/21, 10/20/21; 11/06/21, 11/12/21
-W5; Monday, Wednesday, Thursday; 09/20/21, 10/20/21; 11/06/21, 11/12/21
-W6; Tuesday, Thursday; 09/20/21, 10/20/21; 11/12/21, 11/19/21
-W7; Monday, Tuesday, Thursday; 09/20/21, 10/20/21; 11/12/21, 11/19/21
-W8; Sunday, Tuesday, Thursday; 09/20/21, 10/20/21; 11/20/21, 12/03/21
-W9; Monday, Thursday; 09/20/21, 10/20/21; 11/20/21, 12/03/21
-W10; Sunday, Wednesday, Thursday; none; 12/04/21, 12/10/21
+M1; MSH; Wednesday; 12/05/21; 08/28/21, 09/10/21, 09/24/21
+M2; MSH; Monday, Tuesday; ; 09/10/21, 10/01/21
+M3; MSH; Wednesday, Monday; ; 10/04/21, 10/01/21
+M4; MSH; Sunday; 09/10/21, 09/22/21; 09/17/21, 09/24/21
+M5; MSH; Wednesday, Thursday; 09/10/21, 09/22/21; 10/02/21, 10/08/21
+M6; MSH; Tuesday; 09/10/21, 09/22/21; 10/02/21, 10/08/21
+M7; MSH; Wednesday; 09/10/21, 09/22/21; 10/09/21, 10/15/21
+M8; MSH; ; 09/31/21, 09/12/21; 10/09/21, 10/15/21
+M9; MSH; Wednesday, Tuesday; 09/29/21, 09/24/21; 10/16/21, 10/23/21
+M10; MSH; Monday, Tuesday; 09/10/21, 09/22/21; 10/16/21, 10/23/21
+M11; MSH; Tuesday; 09/10/21, 09/22/21; 10/22/21, 10/29/21
+W1; WDW; Thursday, sunday; 10/02/21, 10/11/21, 10/31/21; 10/22/21, 10/29/21
+W2; WDW; Wednesday; 10/05/21, 10/09/21; 10/20/21, 11/05/21
+W3; WDW; Monday, Wednesday; 09/12/21, 10/23/21; 10/20/21, 11/05/21
+W4; WDW; Sunday; 09/20/21, 10/20/21; 11/06/21, 11/12/21
+W5; WDW; ; 09/20/21, 10/20/21; 11/06/21, 11/12/21
+W6; WDW; Tuesday; 09/11/21, 10/20/21; 11/12/21, 11/19/21
+W7; WDW; Monday, Thursday; 09/03/21, 10/20/21; 11/12/21, 11/19/21
+W8; WDW; Sunday, Tuesday; 09/20/21, 10/20/21; 11/20/21, 12/03/21
+W9; WDW; ; 09/05/21, 10/20/21; 11/20/21, 12/03/21
+W10; WDW; Sunday; ; 12/04/21, 12/10/21
