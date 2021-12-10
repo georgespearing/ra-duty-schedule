@@ -4,134 +4,142 @@ import Person
 import Day
 import Shift
 
-DEFAULT_DIRECTORY = "../data"
+import numpy as np
+
+DEFAULT_DIRECTORY = "data"
+BUILDING_NAMES = ["MSH", "WDW"]
 
 def main():
     # Define and create some individuals. 
     # read the file, create people
     people = []
-    msh_shifts = []
-    wdw_shifts = []
+    shifts = []
+    # msh_shifts = []
+    # wdw_shifts = []
 
-    with open(f"{DEFAULT_DIRECTORY}/people.txt") as f:
-        for line in f.readlines():
-            people_components = line.rstrip().split("; ")
-            person = Person.Person(people_components[0])
-            person.add_preference(people_components[1].split(", "))
-            person.add_no_go(people_components[2])
-            people.append(person)
+    people = get_people(DEFAULT_DIRECTORY)
 
     # now that we have people, assign days
-    with open(f"{DEFAULT_DIRECTORY}/days-to-cover.csv") as f: 
-        for line in f.readlines():
-            components = line.rstrip().split(",")
-            new_day = Day.Day(components[0], components[1], components[2]=='1')
-            new_shift = Shift.Shift(new_day)
-            msh_shifts.append(new_shift)
-            wdw_shifts.append(new_shift)
+    shifts = create_shifts(DEFAULT_DIRECTORY, BUILDING_NAMES)
     
 
     total_shifts = 0
     # for each day, check if person can do that. if so, assign them
-    for shift in msh_shifts:
+    for shift in shifts:
         
         if not shift.date.is_weekend:
 
             for person in people: 
-                person.fitness = selection_fitness(shift, person, total_shifts)
+                person.fitness_primary, person.fitness_secondary = selection_fitness(shift, person, total_shifts)
                 person.days_since_last_duty += 1
 
-            # sort by fitness
-            person_match = sorted(people, key=lambda person: person.fitness, reverse=True)
-            
+            # sort by primary
+            person_match = sorted(people, key=lambda person: person.fitness_primary, reverse=True)
             primary = person_match[0]
-            secondary = person_match[1]
 
-            # if the top fitness has been primary a lot, switch it up
-            if (primary.days_active - primary.days_primary) < (secondary.days_active-secondary.days_primary):
-                primary = person_match[1]
-                secondary = person_match[0]
+            # schedule the person
+            schedule_person(shift, primary, True)
 
-            shift.primary=primary.name
-            primary.active_shifts.append(shift)
-            primary.days_active += 1
-            primary.days_primary += 1
+            # update fitness
+            primary.fitness_primary, primary.fitness_secondary = selection_fitness(shift, primary, total_shifts)
+
+            # sort by secondary
+            person_match = sorted(people, key=lambda person: person.fitness_secondary, reverse=True)
+            secondary = person_match[0]
+            
+            # schedule the person
+            schedule_person(shift, secondary, False)
+        
+            # reset days
             primary.days_since_last_duty = 0
-
-            shift.secondary=secondary.name
-            secondary.active_shifts.append(shift)
-            secondary.days_active += 1
             secondary.days_since_last_duty = 0
 
-            wdw_shift.primary=person_match[2].name
-            person_match[2].active_shifts.append(shift)
-            person_match[2].days_active += 1
-            person_match[2].days_primary += 1
-            person_match[2].days_since_last_duty = 0
-
-            wdw_shift.secondary=person_match[3].name
-            person_match[3].active_shifts.append(shift)
-            person_match[3].days_active += 1
-            person_match[3].days_since_last_duty = 0
-
-        
-            # get primary person
-            # while shift.primary==None:
-            #     for person in people:
-
-                    # print(shift.date.day_of_week, person.day_preference)
-                    # if (shift.date.day_of_week in person.day_preference) and person.days_active <= avg_shifts:
-                    #     shift.primary = person.name
-                    #     person.days_active += 1
-                    #     person.days_primary += 1
-                    #     break
-                
-            # get secondary person
-            # while shift.secondary == None: 
-                # for person in people:
-                #     if shift.secondary==None and shift.date.day_of_week in person.day_preference and person.days_active <= avg_shifts and shift.primary!=person.name:
-                #         shift.secondary = person.name
-                #         person.days_active += 1
-                #         break
-
+            # add to the total shifts scheduled
             total_shifts += 1
 
         # print out the people in the list
     
     with open("outfile.csv", "w") as f_out:
+        f_out.write('Date, Building, Primary, Secondary\n')
         for s in shifts:
             f_out.write(f'{s.to_string()}\n')
 
     print("Statistics: ")
     for p in people:
-        print(p.results_string())
+        print(p.string_results())
 
 
 # function to calculate "fitness" of match
 def selection_fitness(shift, person, total_shifts):
-    fitness = 0
+    primary_fitness = 0
+    secondary_fitness = 0
 
     # if the days don't match, zero fitness. 
-    if shift.date.day_of_week not in person.day_preference or shift.date.date in person.no_go_days:
-        return 0 # don't make a match if person don't want this day
+    if shift.date.day_of_week in person.day_preference or  \
+        shift.date.date in person.no_go_days or \
+        shift in person.active_shifts:
+        return 0, 0 # don't make a match if person don't want this day or is already scheduled
 
-    # # get the last day of duty
-    # last_shift_day = person.active_shifts[-1].split('/')[1]
-    # current_day = shift.date.date.split('/')[1]
+    # take into account building match, large weighting
+    primary_fitness += int(person.building == shift.building) * 10
 
-    # # take into accoutn time since last duty
+    primary_fitness += (person.days_active - person.days_primary)
+    secondary_fitness += person.days_active - (person.days_active - person.days_primary)
+    
+    # average days on duty so far
+    primary_fitness += 1 - (person.days_active / (total_shifts+1))
+    secondary_fitness += 1 - (person.days_active / (total_shifts+1))
 
-    # prioritize days since last duty
-    fitness += total_shifts - (total_shifts - person.days_active)
+    # also take into account days since last duty, add some weight to it
+    primary_fitness += (person.days_since_last_duty)
+    secondary_fitness += (person.days_since_last_duty)
 
-    # also take into account total days active, add some weight to it
-    fitness += (person.days_since_last_duty+1)*1.1
+    # print(f'{primary_fitness}  ||  {secondary_fitness}')
 
-    return fitness
-
-
+    return primary_fitness, secondary_fitness
 
 # function to schedule RAs
+def schedule_person(shift, person, primary):
+    shift.primary=person.name
+    person.add_shift(shift)
+    person.days_active += 1
+
+    if primary:
+        person.days_primary += 1
+
+# read in people
+def get_people(data_directory):
+    people = []
+
+    with open(f"{data_directory}/people.txt") as f:
+        for line in f.readlines():
+            people_components = line.rstrip().split("; ")
+            person = Person.Person(people_components[0], people_components[1])
+            person.add_preference(people_components[2].split(", "))
+            person.add_no_go(people_components[3].split(", "))
+            people.append(person)
+
+    return people
+
+def create_shifts(data_directory, building_names):
+    # msh_shifts = []
+    # wdw_shifts = []
+    shifts = []
+
+    with open(f"{DEFAULT_DIRECTORY}/days-to-cover.csv") as f: 
+        for line in f.readlines():
+            components = line.rstrip().split(",")
+            for building in building_names:
+                new_day = Day.Day(components[0], components[1], components[2]=='1')
+                new_shift = Shift.Shift(new_day, building)
+                # new_day2 = Day.Day(components[0], components[1], components[2]=='1')
+                # new_shift2 = Shift.Shift(new_day2, "WDW")
+                # msh_shifts.append(Shift.Shift(Day.Day(components[0], components[1], components[2]=='1'), "MSH"))
+                # wdw_shifts.append(Shift.Shift(Day.Day(components[0], components[1], components[2]=='1'), "WDW"))
+                shifts.append(new_shift)
+                # shifts.append(new_shift2)
+    
+    return shifts
 
 
 if __name__ == '__main__':
