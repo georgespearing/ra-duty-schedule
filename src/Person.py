@@ -34,7 +34,8 @@ class Person:
         self.active_shifts.append(shift)
 
     def add_no_go(self, date):
-        self.no_go_days.append(date)
+        for day in date:
+            self.no_go_days.append(day)
 
     def add_preference(self, day_of_week):
         for day in day_of_week:
@@ -49,5 +50,5 @@ class Person:
         return f'{self.name}; Prefers: {self.day_preference}; Cannot work {self.no_go_days}'
 
     def string_results(self):
-        return f'{self.name}; Primary Shifts: {self.days_primary}; Secondary Shifts: {self.days_active-self.days_primary} \
+        return f'{self.name} \t Primary Shifts: {self.days_primary} Secondary Shifts: {self.days_active-self.days_primary} \
                 Primary Weekend: {self.weekend_primary}; Secondary_Weekend: {self.weekend_active - self.weekend_primary}'

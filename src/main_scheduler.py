@@ -66,8 +66,7 @@ def main():
 
             for person in people: 
                 person.weekend_fitness_primary, person.weekend_fitness_secondary = selection_fitness_weekend(shift, person, actual_weekends)
-                if shift.date.is_weekend:
-                    person.days_since_last_weekend += 1
+                person.days_since_last_weekend += 1
 
             # sort by primary
             person_match = sorted(people, key=lambda person: person.weekend_fitness_primary, reverse=True)
@@ -117,10 +116,11 @@ def selection_fitness_weekday(shift, person, total_shifts):
         return 0, 0 # don't make a match if person don't want this day or is already scheduled
 
     # take into account building match, large weighting
-    primary_fitness += int(person.building == shift.building) * 10
+    primary_fitness += int(person.building == shift.building) * 20
 
+    # primary vs secondary split
     primary_fitness += (person.days_active - person.days_primary)
-    secondary_fitness += person.days_active - (person.days_active - person.days_primary)
+    secondary_fitness += person.days_active - (person.days_active - person.days_primary) * 3
     
     # average days on duty so far
     primary_fitness += 1 - (person.days_active / (total_shifts))
@@ -146,10 +146,11 @@ def selection_fitness_weekend(shift, person, total_weekends):
         return 0, 0 # don't make a match if person don't want this day or is already scheduled
 
     # take into account building match, large weighting
-    weekend_primary_fitness += int(person.building == shift.building) * 10
+    weekend_primary_fitness += int(person.building == shift.building) * 20
 
+    # primary vs secondary split
     weekend_primary_fitness += (person.weekend_active - person.weekend_primary)
-    weekend_secondary_fitness += person.weekend_active - (person.weekend_active - person.weekend_primary)
+    weekend_secondary_fitness += person.weekend_active - (person.weekend_active - person.weekend_primary) * 3
     
     # average days on duty so far
     weekend_primary_fitness += 1 - (person.weekend_active / (total_weekends))
