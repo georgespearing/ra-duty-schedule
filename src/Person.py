@@ -8,11 +8,22 @@ class Person:
         self.no_go_days = [] # date as string "05/03/21" that are no go
         self.active_shifts = [] # date as string "05/03/21" that are assigned
 
+        # weekday statistics tracking
         self.days_active = 0
         self.days_primary = 0
         self.days_since_last_duty = 0
         self.fitness_primary = 0
         self.fitness_secondary = 0
+
+        # weekend statistics tracking
+        self.weekend_primary = 0
+        self.weekend_secondary = 0
+        self.days_since_last_weekend = 0
+        self.weekend_fitness_primary = 0
+        self.weekend_fitness_secondary = 0
+        self.weekend_active = 0
+        
+        
 
     # def __init__(self, name, days, no_go):
     #     self.__init__()
@@ -38,4 +49,5 @@ class Person:
         return f'{self.name}; Prefers: {self.day_preference}; Cannot work {self.no_go_days}'
 
     def string_results(self):
-        return f'{self.name}; Primary Shifts: {self.days_primary}; Secondary Shifts: {self.days_active-self.days_primary}'
+        return f'{self.name}; Primary Shifts: {self.days_primary}; Secondary Shifts: {self.days_active-self.days_primary} \
+                Primary Weekend: {self.weekend_primary}; Secondary_Weekend: {self.weekend_active - self.weekend_primary}'

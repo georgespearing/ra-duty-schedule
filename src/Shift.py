@@ -15,4 +15,4 @@ class Shift:
         self.secondary = name
 
     def to_string(self):
-        return f'{self.date.date}, {self.building}, {self.primary}, {self.secondary}'
+        return f'{self.date.date}, {self.date.day_of_week}, {self.building}, {self.primary}, {self.secondary}'
