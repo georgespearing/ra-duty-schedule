@@ -9,14 +9,12 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    date.cpp \
     main.cpp \
     person.cpp \
     scheduler.cpp \
     shift.cpp
 
 HEADERS += \
-    date.h \
     person.h \
     scheduler.h \
     shift.h

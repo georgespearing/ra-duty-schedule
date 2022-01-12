@@ -94,18 +94,21 @@ def selection_fitness(shift, person, total_shifts):
     primary_fitness += (person.days_since_last_duty)
     secondary_fitness += (person.days_since_last_duty)
 
-    # print(f'{primary_fitness}  ||  {secondary_fitness}')
+    print(f'{primary_fitness}  ||  {secondary_fitness}')
 
     return primary_fitness, secondary_fitness
 
 # function to schedule RAs
 def schedule_person(shift, person, primary):
-    shift.primary=person.name
+    
     person.add_shift(shift)
     person.days_active += 1
 
     if primary:
+        shift.primary=person.name
         person.days_primary += 1
+    else:
+        shift.secondary=person.name
 
 # read in people
 def get_people(data_directory):

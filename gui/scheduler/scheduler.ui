@@ -25,6 +25,13 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QPushButton" name="pushButton">
@@ -67,7 +74,7 @@
         <attribute name="title">
          <string>Shifts</string>
         </attribute>
-        <widget class="QTableWidget" name="tableWidget_2">
+        <widget class="QTableWidget" name="table_shift_view">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -83,7 +90,7 @@
          </row>
          <column>
           <property name="text">
-           <string>New Column</string>
+           <string>Date</string>
           </property>
          </column>
          <column>
@@ -93,7 +100,7 @@
          </column>
          <column>
           <property name="text">
-           <string>New Column</string>
+           <string>Primary</string>
           </property>
          </column>
          <column>
@@ -107,7 +114,7 @@
         <attribute name="title">
          <string>Edit People File</string>
         </attribute>
-        <widget class="QTableWidget" name="tableWidget">
+        <widget class="QTableWidget" name="table_people_view">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -116,11 +123,6 @@
            <height>451</height>
           </rect>
          </property>
-         <row>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </row>
          <column>
           <property name="text">
            <string>Name</string>
@@ -128,17 +130,12 @@
          </column>
          <column>
           <property name="text">
-           <string>Building</string>
+           <string>Primary Count</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Days of Week Cannot Work</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Specific Dates Cannot Work</string>
+           <string>Secondary Count</string>
           </property>
          </column>
         </widget>
@@ -146,7 +143,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="button_export">
        <property name="text">
         <string>Export to Disk</string>
        </property>
@@ -216,5 +213,38 @@
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>actionExit</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_export</sender>
+   <signal>pressed()</signal>
+   <receiver>actionExport</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>395</x>
+     <y>558</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
