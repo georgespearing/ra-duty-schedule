@@ -4,7 +4,7 @@ class Person:
     def __init__(self, name, building): 
         self.name = name
         self.building = building
-        self.day_preference = [] # M -> Su for preference of days
+        self.day_preference = {} # M -> Su for preference of days
         self.no_go_days = [] # date as string "05/03/21" that are no go
         self.active_shifts = [] # date as string "05/03/21" that are assigned
 
@@ -38,8 +38,11 @@ class Person:
             self.no_go_days.append(day)
 
     def add_preference(self, day_of_week):
+        num_days = len(day_of_week)
+        count = num_days
         for day in day_of_week:
-            self.day_preference.append(day)
+            self.day_preference[day] = float(count) / num_days
+            count -= 1
 
     def reset_all_dates(self):
         self.day_preference = []

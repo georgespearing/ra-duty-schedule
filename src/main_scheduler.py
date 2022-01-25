@@ -5,6 +5,7 @@ import Day
 import Shift
 
 import numpy as np
+import random
 
 DEFAULT_DIRECTORY = "data"
 BUILDING_NAMES = ["MSH", "WDW"]
@@ -110,25 +111,35 @@ def selection_fitness_weekday(shift, person, total_shifts):
     secondary_fitness = 0
 
     # if the days don't match, zero fitness. 
-    if shift.date.day_of_week not in person.day_preference or  \
+    if shift.date.day_of_week not in person.day_preference.keys() or  \
         shift.date.date in person.no_go_days or \
         shift.date in person.active_shifts:
         return 0, 0 # don't make a match if person don't want this day or is already scheduled
 
     # take into account building match, large weighting
-    primary_fitness += int(person.building == shift.building) * 20
+    primary_fitness += int(person.building == shift.building) * 10
 
     # primary vs secondary split
-    primary_fitness += (person.days_active - person.days_primary)
-    secondary_fitness += person.days_active - (person.days_active - person.days_primary) * 3
+    # primary_fitness += (person.days_active - person.days_primary)
+    # secondary_fitness += person.days_active - (person.days_active - person.days_primary)
+
+    primary_fitness -= (person.days_primary - (person.days_active - person.days_primary))
+    secondary_fitness += (person.days_primary - (person.days_active - person.days_primary))
     
     # average days on duty so far
-    primary_fitness += 1 - (person.days_active / (total_shifts))
-    secondary_fitness += 1 - (person.days_active / (total_shifts))
+    primary_fitness += 1 - ((person.days_active / (total_shifts))) * 10
+    secondary_fitness += 1 - ((person.days_active / (total_shifts))) * 10
 
     # also take into account days since last duty, add some weight to it
     primary_fitness += (person.days_since_last_duty)
     secondary_fitness += (person.days_since_last_duty)
+
+    # # weight Day preference
+    primary_fitness += person.day_preference[shift.date.day_of_week]
+    secondary_fitness += person.day_preference[shift.date.day_of_week]
+
+    # primary_fitness += random.random() / 2
+    # secondary_fitness += random.random() / 2
 
     # print(f'{primary_fitness}  ||  {secondary_fitness}')
 
@@ -146,15 +157,15 @@ def selection_fitness_weekend(shift, person, total_weekends):
         return 0, 0 # don't make a match if person don't want this day or is already scheduled
 
     # take into account building match, large weighting
-    weekend_primary_fitness += int(person.building == shift.building) * 20
+    weekend_primary_fitness += int(person.building == shift.building) * 10
 
     # primary vs secondary split
-    weekend_primary_fitness += (person.weekend_active - person.weekend_primary)
-    weekend_secondary_fitness += person.weekend_active - (person.weekend_active - person.weekend_primary) * 3
-    
+    weekend_primary_fitness -= (person.weekend_primary - (person.weekend_active - person.weekend_primary))
+    weekend_secondary_fitness += (person.weekend_primary - (person.weekend_active - person.weekend_primary))
+
     # average days on duty so far
-    weekend_primary_fitness += 1 - (person.weekend_active / (total_weekends))
-    weekend_secondary_fitness += 1 - (person.weekend_active / (total_weekends))
+    weekend_primary_fitness += (1 - (person.weekend_active / (total_weekends))) * 10
+    weekend_secondary_fitness += (1 - (person.weekend_active / (total_weekends))) * 10
 
     # also take into account days since last duty, add some weight to it
     weekend_primary_fitness += (person.days_since_last_weekend)
